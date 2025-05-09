@@ -78,7 +78,7 @@ public class BoardMenu {
                 .map(bc -> new BoardColumnInfoDTO(bc.getId(), bc.getOrder(), bc.getKind()))
                 .toList();
         try(var connection = getConnection()){
-            new CardService(connection).moveToNextColumn(cardId, boardColumnsInfo);
+            new CardService(connection).moveToNextColumn(cardId, boardColumnsInfo, entity.getId());
         } catch (RuntimeException ex){
             System.out.println(ex.getMessage());
         }
@@ -93,7 +93,7 @@ public class BoardMenu {
                 .map(bc -> new BoardColumnInfoDTO(bc.getId(), bc.getOrder(), bc.getKind()))
                 .toList();
         try(var connection = getConnection()){
-            new CardService(connection).block(cardId, reason, boardColumnsInfo);
+            new CardService(connection).block(cardId, reason, boardColumnsInfo, entity.getId());
         } catch (RuntimeException ex){
         System.out.println(ex.getMessage());
         }
@@ -105,7 +105,7 @@ public class BoardMenu {
         System.out.println("Informe o motivo do desbloqueio do card");
         var reason = scanner.next();
         try(var connection = getConnection()){
-            new CardService(connection).unblock(cardId, reason);
+            new CardService(connection).unblock(cardId, reason, entity.getId());
         } catch (RuntimeException ex){
             System.out.println(ex.getMessage());
         }
@@ -119,7 +119,7 @@ public class BoardMenu {
                 .map(bc -> new BoardColumnInfoDTO(bc.getId(), bc.getOrder(), bc.getKind()))
                 .toList();
         try(var connection = getConnection()){
-            new CardService(connection).cancel(cardId, cancelColumn.getId(), boardColumnsInfo);
+            new CardService(connection).cancel(cardId, cancelColumn.getId(), boardColumnsInfo, entity.getId());
         } catch (RuntimeException ex){
             System.out.println(ex.getMessage());
         }
@@ -159,7 +159,7 @@ public class BoardMenu {
         System.out.println("Informe o id do card que deseja visualizar");
         var selectedCardId = scanner.nextLong();
         try(var connection = getConnection()){
-            new CardQueryService(connection).findById(selectedCardId)
+            new CardQueryService(connection).findById(selectedCardId, entity.getId())
                     .ifPresentOrElse(
                             c ->  {
                                 System.out.printf("Card %s - %s\n", c.id(), c.title());
@@ -170,7 +170,7 @@ public class BoardMenu {
                                 System.out.printf("Já foi bloqueado %s vezes\n", c.blocksAmount());
                                 System.out.printf("Está no momento na coluna %s - %s\n", c.columnId(), c.columnName());
                             },
-                            () -> System.out.printf("Não existe um card com o id %s\n", selectedCardId));
+                            () -> System.out.printf("Não existe um card com o id %s no board selecionado\n", selectedCardId));
         }
     }
 }

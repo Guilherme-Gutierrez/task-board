@@ -43,7 +43,7 @@ public class CardDAO {
 
     }
 
-    public Optional<CardDetailsDTO> findById(final Long id) throws SQLException {
+    public Optional<CardDetailsDTO> findById(final Long id, final Long board_id) throws SQLException {
         var sql =
                 """
                 SELECT c.id,
@@ -62,10 +62,11 @@ public class CardDAO {
                   AND b.unblocked_at IS NULL
                   INNER JOIN BOARDS_COLUMNS bc
                   ON bc.id = c.board_column_id
-                  WHERE c.id = ?;
+                  WHERE c.id = ? AND bc.board_id = ?;
                 """;
         try(var statement = connection.prepareStatement(sql)){
             statement.setLong(1, id);
+            statement.setLong(2, board_id);
             statement.executeQuery();
             var resultSet = statement.getResultSet();
             if(resultSet.next()){
