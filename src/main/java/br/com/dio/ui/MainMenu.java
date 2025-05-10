@@ -96,7 +96,7 @@ public class MainMenu {
         try(var connection = getConnection()){
             var service = new BoardService(connection);
             if (service.delete(id)){
-                System.out.printf("O board %s excluído\n", id);
+                System.out.printf("O board %s foi excluído\n", id);
             }else {
                 System.out.printf("Não foi encontrado um board com id %s\n", id);
             }
